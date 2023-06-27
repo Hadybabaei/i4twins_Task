@@ -14,7 +14,6 @@ exports.getAllTimeseries = async (startTime, endTime) => {
 
   const projection = { _id: 0, timestamp: 1, data: 1 };
   
-  // Utilize indexes for faster querying
   const timeseriesData = await Timeseries.find(query, projection)
     .sort({ timestamp: 1 })
     .lean();
@@ -25,7 +24,7 @@ exports.getAllTimeseries = async (startTime, endTime) => {
 //   const query = { timestamp: { $gte: startTime, $lte: endTime } };
 //   const projection = { _id: 0, timestamp: 1, data: 1 };
 
-//   // Utilize indexes for faster querying
+
 //   const timeseriesData = await Timeseries.find(query, projection)
 //     .sort({ timestamp: 1 })
 //     .lean();
