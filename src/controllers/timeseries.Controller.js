@@ -2,8 +2,8 @@ const timeseriesService = require('../services/timeseries.Service');
 
 exports.createTimeseries = async (req, res) => {
   try {
-    const { timestamp, data } = req.body;
-    await timeseriesService.createTimeseries(timestamp, data);
+    // const { timestamp, data } = req.body;
+    await timeseriesService.createTimeseries(req.body);
     res.sendStatus(201);
   } catch (error) {
     console.error(error);

@@ -12,12 +12,14 @@ function generateRandomTimestamp(start, end) {
 // Generate a random timeseries data point
 function generateTimeseriesData() {
   const temperature = faker.random.number({ min: 20, max: 30, precision: 0.1 });
+  const sensorId =  faker.random.uuid();
   const humidity = faker.random.number({ min: 40, max: 60, precision: 0.1 });
   const pressure = faker.random.number({ min: 1000, max: 1100, precision: 0.1 });
 
   return {
     timestamp: generateRandomTimestamp(new Date('2023-01-01'), new Date('2023-12-31')),
-    data: {
+    sensorId,
+    value: {
       temperature,
       humidity,
       pressure,

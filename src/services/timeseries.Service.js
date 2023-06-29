@@ -1,8 +1,7 @@
 const Timeseries = require("../models/timeseries.Model")
 
-exports.createTimeseries = async (timestamp, data) => {
-  const timeseries = new Timeseries({ timestamp, data });
-  await timeseries.save();
+exports.createTimeseries = async (bulkData) => {
+  return await Timeseries.insertMany(bulkData)
 };
 
 exports.getAllTimeseries = async (startTime, endTime) => {
@@ -16,7 +15,7 @@ exports.getAllTimeseries = async (startTime, endTime) => {
   
   const timeseriesData = await Timeseries.find(query, projection)
     .sort({ timestamp: 1 })
-    .lean();
+    .lean().exec();
 
   return timeseriesData;
 };
