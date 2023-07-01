@@ -12,22 +12,28 @@ exports.createTimeseries = async (req, res) => {
 };
 
 exports.getAllTimeseries = async (req, res) => {
-    try {
-      let startTime = req.query.startTime;
-      let endTime = req.query.endTime;
+  try {
+    let startTime = req.query.startTime;
+    let endTime = req.query.endTime;
+    let pageSize = parseInt(req.query.pageSize) || 1000; // Set a default page size of 1000 if not provided
+    let page = parseInt(req.query.page) || 1; // Set a default page number of 1 if not provided
   
-      // If startTime or endTime is not provided, set them to null
-      startTime = startTime || null;
-      endTime = endTime || null;
+    // If startTime or endTime is not provided, set them to null
+    startTime = startTime || null;
+    endTime = endTime || null;
   
-      const timeseriesData = await timeseriesService.getAllTimeseries(startTime, endTime);
+    const { timeseriesData, totalDocuments, totalPages } = await timeseriesService.getAllTimeseries(startTime, endTime, pageSize, page);
   
-      res.json(timeseriesData);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  };
+    res.json({
+      data: timeseriesData,
+      totalDocuments: totalDocuments,
+      totalPages: totalPages
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 // exports.getAllTimeseries = async (req, res) => {
 //     try {
 //       const startTime = req.query.startTime;

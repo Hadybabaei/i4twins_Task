@@ -6,6 +6,8 @@ const timeseriesSchema = new mongoose.Schema({
   value: { type: mongoose.Schema.Types.Mixed, required: true },
 });
 
+timeseriesSchema.index({ timestamp: 1 });
+
 const Timeseries = mongoose.model('Timeseries', timeseriesSchema);
 
 module.exports = Timeseries;

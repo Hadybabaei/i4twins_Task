@@ -4,29 +4,28 @@ exports.createTimeseries = async (bulkData) => {
   return await Timeseries.insertMany(bulkData)
 };
 
-exports.getAllTimeseries = async (startTime, endTime) => {
+exports.getAllTimeseries = async (startTime, endTime, pageSize, page) => {
   let query = {};
   
   if (startTime && endTime) {
     query = { timestamp: { $gte: startTime, $lte: endTime } };
   }
 
-  const projection = { _id: 0, timestamp: 1, data: 1 };
+  const projection = { _id: 0, timestamp: 1, value: 1 };
+  const skip = (page - 1) * pageSize;
   
-  const timeseriesData = await Timeseries.find(query, projection)
-    .sort({ timestamp: 1 })
-    .lean().exec();
+  const [timeseriesData, totalDocuments] = await Promise.all([
+    Timeseries.find(query, projection)
+      .sort({ timestamp: 1 })
+      .skip(skip)
+      .limit(pageSize)
+      .lean()
+      .exec(),
+    Timeseries.countDocuments(query)
+  ]);
 
-  return timeseriesData;
+  const totalPages = Math.ceil(totalDocuments / pageSize);
+
+  return { timeseriesData, totalDocuments, totalPages };
 };
-// exports.getAllTimeseries = async (startTime, endTime) => {
-//   const query = { timestamp: { $gte: startTime, $lte: endTime } };
-//   const projection = { _id: 0, timestamp: 1, data: 1 };
 
-
-//   const timeseriesData = await Timeseries.find(query, projection)
-//     .sort({ timestamp: 1 })
-//     .lean();
-
-//   return timeseriesData;
-// };
