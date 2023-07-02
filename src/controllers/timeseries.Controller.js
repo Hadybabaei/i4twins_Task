@@ -1,24 +1,21 @@
 const timeseriesService = require('../services/timeseries.Service');
 
-exports.createTimeseries = async (req, res) => {
+exports.createTimeseries = async (req, res, next) => {
   try {
-    // const { timestamp, data } = req.body;
     await timeseriesService.createTimeseries(req.body);
-    res.sendStatus(201);
+    res.status(201).json({ Message: "Timeseries Data Inserted", Success: true });
   } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+    next(new CustomError("Error creating timeseries", 500));
   }
 };
 
-exports.getAllTimeseries = async (req, res) => {
+exports.getAllTimeseries = async (req, res, next) => {
   try {
     let startTime = req.query.startTime;
     let endTime = req.query.endTime;
-    let pageSize = parseInt(req.query.pageSize) || 1000; // Set a default page size of 1000 if not provided
-    let page = parseInt(req.query.page) || 1; // Set a default page number of 1 if not provided
+    let pageSize = parseInt(req.query.pageSize) || 1000; 
+    let page = parseInt(req.query.page) || 1; 
   
-    // If startTime or endTime is not provided, set them to null
     startTime = startTime || null;
     endTime = endTime || null;
   
@@ -30,20 +27,6 @@ exports.getAllTimeseries = async (req, res) => {
       totalPages: totalPages
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    next(error);
   }
 };
-// exports.getAllTimeseries = async (req, res) => {
-//     try {
-//       const startTime = req.query.startTime;
-//       const endTime = req.query.endTime;
-  
-//       const timeseriesData = await timeseriesService.getAllTimeseries(startTime, endTime);
-  
-//       res.json(timeseriesData);
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   };
